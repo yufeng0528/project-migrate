@@ -53,28 +53,8 @@ public class JavaReplaceHandler implements ReplaceHandler{
 				}
 				return false;
 			}
-		}, new IOFileFilter() {
-			
-			@Override
-			public boolean accept(File dir, String name) {
-				return true;
-			}
-			
-			@Override
-			public boolean accept(File file) {
-				if (file.getName().startsWith(FileConstants.POINT)) {
-					return false;
-				}
-				
-				if (file.getName().equals(FileConstants.CLASS_DIR_NAME)) {
-					return false;
-				}
-				if (file.getName().equals(FileConstants.TAGRGET_DIR_NAME)) {
-					return false;
-				}
-				return true;
-			}
-		});
+		}, new TargetFileFilter());
+		
 		while (tagetFiles.hasNext()) {
 			File file = (File) tagetFiles.next();
 			// 内存流, 作为临时流  

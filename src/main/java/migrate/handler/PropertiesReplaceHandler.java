@@ -54,28 +54,7 @@ public class PropertiesReplaceHandler implements ReplaceHandler {
 				}
 				return false;
 			}
-		}, new IOFileFilter() {
-			
-			@Override
-			public boolean accept(File dir, String name) {
-				return true;
-			}
-			
-			@Override
-			public boolean accept(File file) {
-				if (file.getName().startsWith(FileConstants.POINT)) {
-					return false;
-				}
-				
-				if (file.getName().equals(FileConstants.CLASS_DIR_NAME)) {
-					return false;
-				}
-				if (file.getName().equals(FileConstants.TAGRGET_DIR_NAME)) {
-					return false;
-				}
-				return true;
-			}
-		});
+		}, new TargetFileFilter());
 		System.out.println("处理 环境" + config.getDir() + "/" + config.getKey());
 
 		while (tagetFiles.hasNext()) {
