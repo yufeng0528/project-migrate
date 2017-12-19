@@ -27,6 +27,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import migrate.MigrateException;
 import migrate.dto.Config;
 import migrate.util.Constants;
 import migrate.util.FileConstants;
@@ -104,7 +105,9 @@ public class PomReplaceHandler implements ReplaceHandler {
 //				System.out.println(root.getTagName());
 				
 				Node node = selectSingleNode(config.getKey(), root);
-
+				if (node == null) {
+					throw new MigrateException(config.getKey() + " xpath路径有问题");
+				}
 				node.setTextContent(config.getValue());
 
 //				System.out.println(node.getNodeName() + " " + node.getTextContent());

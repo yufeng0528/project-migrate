@@ -2,6 +2,7 @@ package migrate.handler;
 
 import java.util.ResourceBundle;
 
+import migrate.MigrateException;
 import migrate.dto.Config;
 import migrate.util.Constants;
 
@@ -15,9 +16,12 @@ public class ReplaceContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public void handler(Config config) {
+		if (!properties.containsKey(config.getType())) {
+			throw new MigrateException("找不到处理的方法 配置类型不正确或者没有加入到handler.properties");
+		}
 		String handlerClass = properties.getString(config.getType());
 		if (handlerClass == null) {
-			System.err.println("找不到处理的方法");
+			throw new MigrateException("找不到处理的方法 配置类型不正确或者没有加入到handler.properties或者类名写错了");
 		}
 		try {
 			Class<ReplaceHandler> class1 = (Class<ReplaceHandler>) Class.forName(handlerClass);
