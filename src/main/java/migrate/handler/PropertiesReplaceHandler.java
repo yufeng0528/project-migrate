@@ -131,6 +131,7 @@ public class PropertiesReplaceHandler implements ReplaceHandler {
 		config.setDir("qa");
 		config.setKey("session.domain");
 		config.setValue(".ekeban.com1");
+		config.setProject("mtfix-account-center");
 		replaceHandler.handler(config , Constants.BASE_DIR);
 	}
 }

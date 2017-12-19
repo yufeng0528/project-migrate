@@ -129,6 +129,7 @@ public class JavaReplaceHandler implements ReplaceHandler{
 		config.setDir("Constants");
 		config.setKey("QRCODE_TAG");
 		config.setValue("\"maiti\"");
+		config.setProject("mtfix-account-center");
 		replaceHandler.handler(config, Constants.BASE_DIR);
 	}
 }
