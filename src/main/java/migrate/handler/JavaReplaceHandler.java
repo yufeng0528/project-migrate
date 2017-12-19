@@ -18,18 +18,20 @@ import migrate.dto.Config;
 import migrate.util.Constants;
 import migrate.util.FileConstants;
 
-public class JavaReplaceHandler {
+public class JavaReplaceHandler implements ReplaceHandler{
 
-private String basePath = Constants.BASE_DIR;
+	private String basePath;
 	
 	private Config config;
 	
-	public void handler() {
+	public void handler(Config config, String basePath) {
+		this.config = config;
+		this.basePath = basePath;
 		find();
 	}
 	
 	private void find() {
-		File baseDirectory = new File(basePath + "/mtfix-merchant-web/");
+		File baseDirectory = new File(basePath + "/" + config.getProject());
 		Iterator<File> tagetFiles = FileUtils.iterateFiles(baseDirectory, new IOFileFilter() {
 			
 			@Override
@@ -44,7 +46,7 @@ private String basePath = Constants.BASE_DIR;
 				}
 				String suffix = FilenameUtils.getExtension(file.getName());
 				if (suffix.equals(FileConstants.JAVA_SUFFIX)) {
-					if (file.getName().endsWith(config.getDir() + FileConstants.JAVA_SUFFIX)) {
+					if (file.getName().equals(config.getDir()+ FileConstants.POINT + FileConstants.JAVA_SUFFIX)) {
 						return true;
 					}
 					return false;
@@ -79,27 +81,28 @@ private String basePath = Constants.BASE_DIR;
 			CharArrayWriter  tempStream = new CharArrayWriter();  
 			
 			System.out.println("--" + file.getAbsolutePath());
-//			try {
-//				List<String> lines = FileUtils.readLines(file, "UTF-8");
-//				for (String line : lines) {
-//					if (line.contains(config.getKey()) && StringUtils.isNotBlank(config.getValue())) {
-//						tempStream.write(config.getKey() + "=" + config.getValue());  
-//					} else {
-//						tempStream.write(line);  
-//					}
-//					tempStream.write(FileConstants.LINE_SEPERATOR);
-//				}
-//				// 将内存中的流 写入 文件  
-//				FileWriter out = new FileWriter(file);
-//				tempStream.writeTo(out);
-//				out.close();
-//			} catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//			} catch (UnsupportedEncodingException e) {
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+			try {
+				List<String> lines = FileUtils.readLines(file, "UTF-8");
+				for (String line : lines) {
+					if (line.contains(config.getKey()) && StringUtils.isNotBlank(config.getValue())) {
+						String[] values = line.split("=");
+						tempStream.write(values[0] + "= " + config.getValue() + ";");  
+					} else {
+						tempStream.write(line);  
+					}
+					tempStream.write(FileConstants.LINE_SEPERATOR);
+				}
+				// 将内存中的流 写入 文件  
+				FileWriter out = new FileWriter(file);
+				tempStream.writeTo(out);
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
 		}
 	}
@@ -126,7 +129,6 @@ private String basePath = Constants.BASE_DIR;
 		config.setDir("Constants");
 		config.setKey("QRCODE_TAG");
 		config.setValue("\"maiti\"");
-		replaceHandler.setConfig(config);
-		replaceHandler.handler();
+		replaceHandler.handler(config, Constants.BASE_DIR);
 	}
 }

@@ -18,18 +18,20 @@ import migrate.dto.Config;
 import migrate.util.Constants;
 import migrate.util.FileConstants;
 
-public class PropertiesReplaceHandler {
+public class PropertiesReplaceHandler implements ReplaceHandler {
 
-	private String basePath = Constants.BASE_DIR;
+	private String basePath;
 	
 	private Config config;
 	
-	public void handler() {
+	public void handler(Config config, String basePath) {
+		this.config = config;
+		this.basePath = basePath;
 		find();
 	}
 	
 	private void find() {
-		File baseDirectory = new File(basePath + "/mtfix-merchant-web/");
+		File baseDirectory = new File(basePath + "/" + config.getProject());
 		Iterator<File> tagetFiles = FileUtils.iterateFiles(baseDirectory, new IOFileFilter() {
 			
 			@Override
@@ -74,6 +76,8 @@ public class PropertiesReplaceHandler {
 				return true;
 			}
 		});
+		System.out.println("处理 环境" + config.getDir() + "/" + config.getKey());
+
 		while (tagetFiles.hasNext()) {
 			File file = (File) tagetFiles.next();
 			// 内存流, 作为临时流  
@@ -127,7 +131,6 @@ public class PropertiesReplaceHandler {
 		config.setDir("qa");
 		config.setKey("session.domain");
 		config.setValue(".ekeban.com1");
-		replaceHandler.setConfig(config);
-		replaceHandler.handler();
+		replaceHandler.handler(config , Constants.BASE_DIR);
 	}
 }

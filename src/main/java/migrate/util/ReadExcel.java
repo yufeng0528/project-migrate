@@ -28,7 +28,7 @@ public class ReadExcel {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<Config> readExcel(String path) throws IOException {
+	public static List<Config> readExcel(String path) throws IOException {
 		if (path == null || FileConstants.EMPTY.equals(path)) {
 			return null;
 		} else {
@@ -54,7 +54,7 @@ public class ReadExcel {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<Config> readXlsx(String path) throws IOException {
+	private static List<Config> readXlsx(String path) throws IOException {
 		System.out.println(Constants.PROCESSING + path);
 		InputStream is = new FileInputStream(path);
 		XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
@@ -99,7 +99,7 @@ public class ReadExcel {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<Config> readXls(String path) throws IOException {
+	private static List<Config> readXls(String path) throws IOException {
 		System.out.println(Constants.PROCESSING + path);
 		InputStream is = new FileInputStream(path);
 		HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
@@ -139,7 +139,7 @@ public class ReadExcel {
 					} else {
 						student.setKey(getValue(key));
 					}
-					if (StringUtils.isEmpty(getValue(type)) && lastConfig != null) {
+					if (StringUtils.isEmpty(getValue(value)) && lastConfig != null) {
 						student.setValue(lastConfig.getValue());
 					} else {
 						student.setValue(getValue(value));
@@ -161,7 +161,7 @@ public class ReadExcel {
 	}
 
 	@SuppressWarnings("static-access")
-	private String getValue(XSSFCell xssfRow) {
+	private static String getValue(XSSFCell xssfRow) {
 		if (xssfRow.getCellType() == xssfRow.CELL_TYPE_BOOLEAN) {
 			return String.valueOf(xssfRow.getBooleanCellValue());
 		} else if (xssfRow.getCellType() == xssfRow.CELL_TYPE_NUMERIC) {
@@ -172,7 +172,7 @@ public class ReadExcel {
 	}
 
 	@SuppressWarnings("static-access")
-	private String getValue(HSSFCell hssfCell) {
+	private static String getValue(HSSFCell hssfCell) {
 		if (hssfCell == null) {
 			return "";
 		}
@@ -199,10 +199,10 @@ public class ReadExcel {
 		String excel2003_2007 = Constants.STUDENT_INFO_XLS_PATH;
 //		String excel2010 = Constants.STUDENT_INFO_XLSX_PATH;
 		// read the 2003-2007 excel
-		List<Config> list = new ReadExcel().readExcel(excel2003_2007);
+		List<Config> list = ReadExcel.readExcel(excel2003_2007);
 		if (list != null) {
 			for (Config student : list) {
-				System.out.println(student.getProject() + "-" + student.getDir() + "-" + student.getKey());
+				System.out.println(student.getProject() + "-" + student.getDir() + "-" + student.getKey() + "-" + student.getValue());
 			}
 		}
 //		System.out.println("======================================");
